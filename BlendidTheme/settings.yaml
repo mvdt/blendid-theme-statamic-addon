@@ -1,0 +1,5 @@
+fields:
+  blendid_theme_manifest_filepath:
+    type: text
+  blendid_theme_manifest_filename:
+    type: text
