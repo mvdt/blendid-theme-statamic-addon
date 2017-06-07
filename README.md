@@ -23,3 +23,7 @@ The default settings are set for Blendid, so that's why it's a "Blendid theme" a
 `{{ blendid_theme }}` has all the exact same functionality as Statamic's `{{ theme }}` tag, except it will use the settings you set in **Control Panel > Addons > Blendid Theme > Settings** to look for a manifest file when you use the `version` param like this: `<script src="{{ blendid:js version="true" }}"></script>`.
 
 Check out [how we set up Blendid](https://github.com/classyllama/blendid-theme-statamic-addon/wiki/Our-Blendid-setup-for-a-Statamic-project) for a Statamic project.
+
+## License
+
+See the [LICENSE](https://github.com/classyllama/blendid-theme-statamic-addon/blob/master/LICENSE) file for license rights and limitations (MIT).
