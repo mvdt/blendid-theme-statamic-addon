@@ -14,9 +14,10 @@ The default settings are set for Blendid, so that's why it's a "Blendid theme" a
 ## How to install
 
 1. Download the source
-2. Place the `BlendidTheme` folder in your Statamic install at `/site/addons/`
-3. Update addons by running `php please update:addons`
-4. Done!
+2. Rename the folder you downloaded `BlendidTheme`
+3. Add it to your Statamic addon directory at `/site/addons/`
+4. Update addons by running `php please update:addons`
+5. Done!
 
 ## How to use
 
