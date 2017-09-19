@@ -33,7 +33,7 @@ class BlendidThemeTags extends ThemeTags
     {
         $src = $this->get('src');
 
-        $path = $dir . '/' . $src;
+        $path = $dir ? $dir . '/' . $src : $src;
 
         return $this->themeUrl($path);
     }
@@ -59,7 +59,7 @@ class BlendidThemeTags extends ThemeTags
     {
         $src = $this->get('src', Config::get('theming.theme'));
 
-        $path = 'img/' . $src;
+        $path = 'images/' . $src;
 
         $url = $this->themeUrl($path);
 
@@ -81,7 +81,7 @@ class BlendidThemeTags extends ThemeTags
     {
         $src = $this->get('src', Config::get('theming.theme'));
 
-        $path = 'js/' . Str::ensureRight($src, '.js');
+        $path = 'javascripts/' . Str::ensureRight($src, '.js');
 
         $url = $this->themeUrl($path);
 
@@ -101,7 +101,7 @@ class BlendidThemeTags extends ThemeTags
     {
         $src = $this->get('src', Config::get('theming.theme'));
 
-        $path = 'css/' . Str::ensureRight($src, '.css');
+        $path = 'stylesheets/' . Str::ensureRight($src, '.css');
 
         $url = $this->themeUrl($path);
 
@@ -110,6 +110,31 @@ class BlendidThemeTags extends ThemeTags
         }
 
         return $url;
+    }
+
+    /**
+     * The {{ blendid_theme:partial }} tag
+     *
+     * Renders a partial template
+     *
+     * @return string
+     */
+    public function partial()
+    {
+        $src = $this->get('src');
+
+        $partial = File::disk('theme')->get("partials/{$src}.html");
+
+        // Allow front matter in these suckers
+        $parsed = Parse::frontMatter($partial);
+        $variables = array_get($parsed, 'data', []);
+        $template = array_get($parsed, 'content');
+
+        // Front-matter, tag parameters, and the context is all passed through to the partial.
+        // Since 2.5, parameters need to be prefixed with a colon in order to read from the field.
+        $variables = array_merge($this->context, $variables, $this->parameters);
+
+        return Parse::template($template, $variables);
     }
 
     /**
@@ -143,7 +168,7 @@ class BlendidThemeTags extends ThemeTags
     {
         if ($this->getBool('version')) {
             $pi = pathinfo($path);
-            $path = $this->versioned($pi['extension'], $pi['filename']);
+            $path = $this->versioned($pi['dirname'], $pi['filename'], $pi['extension']);
         }
 
         $url = URL::assemble(
@@ -169,13 +194,12 @@ class BlendidThemeTags extends ThemeTags
         return $url;
     }
 
-    private function versioned($type, $file)
+    private function versioned($dir, $file, $type)
     {
         $manifest_filepath = $this->getConfig('blendid_theme_manifest_filepath', '');
         $manifest_filename = $this->getConfig('blendid_theme_manifest_filename', 'rev-manifest.json');
-        $manifest_path = $manifest_filepath.'/'.$manifest_filename;
-
-        $file = "{$type}/{$file}.{$type}";
+        $manifest_path = $manifest_filepath . '/' . $manifest_filename;
+        $file = "{$dir}/{$file}.{$type}";
 
         if (! $manifest = $this->blink->get('manifest')) {
             $manifest = json_decode(File::disk('theme')->get($manifest_path), true);
@@ -183,9 +207,9 @@ class BlendidThemeTags extends ThemeTags
         }
 
         if (isset($manifest[$file])) {
-            return '/'.$manifest_filepath.'/'.$manifest[$file];
+            return $manifest_filepath . '/' . $manifest[$file];
         }
 
-        return '/' . $file;
+        return $file;
     }
 }
