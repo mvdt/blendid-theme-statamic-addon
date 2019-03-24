@@ -81,7 +81,7 @@ class BlendidThemeTags extends ThemeTags
     {
         $src = $this->get('src', Config::get('theming.theme'));
 
-        $path = 'javascripts/' . Str::ensureRight($src, '.js');
+        $path = 'js/' . Str::ensureRight($src, '.js');
 
         $url = $this->themeUrl($path);
 
@@ -101,7 +101,7 @@ class BlendidThemeTags extends ThemeTags
     {
         $src = $this->get('src', Config::get('theming.theme'));
 
-        $path = 'stylesheets/' . Str::ensureRight($src, '.css');
+        $path = 'css/' . Str::ensureRight($src, '.css');
 
         $url = $this->themeUrl($path);
 
